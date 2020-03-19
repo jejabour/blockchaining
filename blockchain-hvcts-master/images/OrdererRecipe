@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: hyperledger/fabric-orderer:1.3.0
+
+%environment
+    export FABRIC_LOGGING_SPEC=info
+    export ORDERER_GENERAL_LISTENADDRESS=127.0.0.1
+    export ORDERER_GENERAL_LISTENPORT=7050
+    export ORDERER_GENERAL_GENESISMETHOD=file
+    export ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+    export ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+    export ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer
+    export ORDERER_GENERAL_TLS_ENABLED=false
+    export ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/msp/orderer/tls/server.key
+    export ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/msp/orderer/tls/server.crt
+    export ORDERER_GENERAL_TLS_ROOTCAS=/etc/hyperledger/msp/orderer/tls/ca.crt
+    export GODEBUG=netdns=go
+
+%post
+    cd /etc/hyperledger
+    mkdir configtx
+    mkdir msp
+    cd msp
+    mkdir peer
+    mkdir users
+    mkdir orderer
+    mkdir peerOrg1
+    cd orderer
+    mkdir msp
+
+%startscript
+    orderer
+
+%runscript
+    orderer
+
+%files
+    --force ../network-config/config/core.yaml /etc/hyperledger/fabric

@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: hyperledger/fabric-ca:1.3.0
+
+%environment
+    export FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+    export FABRIC_CA_SERVER_CA_NAME=ca.example.com
+    export FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+    export FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/cf63ff51b17d7bfc623af94488553abcff64c64ab7341bcac8321438df7adeca_sk
+    export GODEBUG=netdns=go
+
+%post
+    cd /etc/hyperledger
+    mkdir configtx
+    mkdir msp
+    cd msp
+    mkdir peer
+    mkdir users
+    mkdir orderer
+    mkdir peerOrg1
+    cd orderer
+    mkdir msp
+
+%startscript
+    sh -c 'fabric-ca-server start -b admin:adminpw'
+
+%runscript
+    sh -c 'fabric-ca-server start -b admin:adminpw'
+
+
